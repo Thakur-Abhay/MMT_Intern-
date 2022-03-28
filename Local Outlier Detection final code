@@ -1,0 +1,255 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
+import pandas as pd
+
+
+# In[2]:
+
+
+from sklearn.ensemble import IsolationForest
+
+
+# In[3]:
+
+
+import numpy as np
+from sklearn.neighbors import LocalOutlierFactor
+
+
+# In[4]:
+
+
+import matplotlib.pyplot as plt
+
+
+# In[5]:
+
+
+df=pd.read_csv("INvideos.csv")
+
+
+# In[6]:
+
+
+df.columns
+
+
+# In[7]:
+
+
+clf=LocalOutlierFactor(n_neighbors=30,contamination=0.02)
+
+
+# In[8]:
+
+
+df.head()
+
+
+# In[9]:
+
+
+df['ratio']=df['likes']/df['dislikes']
+
+
+# In[10]:
+
+
+df_train=df.iloc[:-10]
+df_test=df.tail(100)
+
+
+# In[11]:
+
+
+df.columns
+
+
+# In[12]:
+
+
+df_test.size
+df.drop(columns=['thumbnail_link','video_error_or_removed','video_id'])
+
+
+# In[13]:
+
+
+# df_train.size
+# df.head(30)
+sortdf=df.sort_values(by='category_id')
+
+
+# In[14]:
+
+
+X=sortdf[['views','comment_count','views','dislikes']].copy()
+# df.columns
+
+
+# In[15]:
+
+
+y_pred=clf.fit_predict(X)
+# filter outlier index
+# outlier_index = where(y_pred == -1) # negative values are outliers and positives inliers
+# filter outlier values
+# outlier_values = df.iloc[outlier_index]
+# plot data
+# plt.scatter(df["x"], df["y"], color = "b", s = 65)
+X_scores = clf.negative_outlier_factor_
+# plt.title("Local Outlier Factor (LOF)")
+
+
+# In[16]:
+
+
+X_scores
+
+
+# In[17]:
+
+
+df['outlier_score']=X_scores
+
+
+# In[18]:
+
+
+# df.head(30)
+
+
+# In[19]:
+
+
+df.describe()
+
+
+# In[20]:
+
+
+# df.drop['video_error_or_removed','description']
+
+
+# In[21]:
+
+
+# plt.scatter(X['outlier_score'],X['category_id'],color='k',s=3.0,label='Data Ponits')
+# X.plot.scatter('outlier_score','title')
+
+
+# In[22]:
+
+
+newdf=df.loc[df['outlier_score']<-4]
+# df.size
+
+
+# In[23]:
+
+
+newdf.shape[0]
+
+
+# In[24]:
+
+
+display(newdf)
+
+
+# In[25]:
+
+
+newdf.drop(columns=['thumbnail_link','video_error_or_removed','video_id','tags','publish_time','description'])
+
+
+# In[26]:
+
+
+newdf.describe()
+
+
+# In[27]:
+
+
+sortdf.describe()
+
+
+# In[28]:
+
+
+display(df.iloc[24842])
+
+
+# In[29]:
+
+
+display(df.iloc[24948])
+
+
+# In[30]:
+
+
+display(df.iloc[25526])
+
+
+# In[31]:
+
+
+display(df.iloc[25842])
+
+
+# In[32]:
+
+
+display(df.iloc[25999])
+
+
+# In[33]:
+
+
+display(df.iloc[26096])
+
+
+# In[34]:
+
+
+display(df.iloc[36756])
+
+
+# In[35]:
+
+
+display(df.iloc[36887])
+
+
+# In[36]:
+
+
+# cli=IsolationForest(random_state=0).fit
+X = [[-1.1], [0.3], [0.5], [100]]
+cli = IsolationForest(random_state=0).fit(X)
+cli.predict([[0.1], [0], [90]])
+
+
+# In[37]:
+
+
+# sortdf
+
+
+# In[41]:
+
+
+type(X)
+
+
+# In[ ]:
+
+
+
+
